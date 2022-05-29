@@ -1,18 +1,15 @@
 package com.projeto.Pokedex.model;
 
 import com.projeto.Pokedex.ValidationGroups;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "pokemon")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -23,7 +20,7 @@ public class Pokemon {
     @Column(name = "id")
     @EqualsAndHashCode.Include
     @NotNull(groups = ValidationGroups.PokemonId.class)
-    private int id;
+    private Long id;
 
     @NotNull
     @Column(name = "numero")
