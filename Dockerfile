@@ -1,5 +1,9 @@
 FROM openjdk:11
+
 WORKDIR /app
-ADD ./out/artifacts/Pokedex_jar/Pokedex.jar Pokedex.jar
+
+ADD target/Pokedex-0.0.1-SNAPSHOT.jar Pokedex-0.0.1-SNAPSHOT.jar
+
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","Pokedex.jar"]
+
+ENTRYPOINT ["java","-jar","Pokedex-0.0.1-SNAPSHOT.jar"]
