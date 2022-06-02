@@ -1,0 +1,34 @@
+version: "3"
+services:
+  mysqldb:
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD= 1234
+      - MYSQL_DATABASE= pokedex
+      - MYSQL_USER= sa
+      - MYSQL_PASSWORD= 1234
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    volumes:
+      - my-db:/var/lib/mysql
+    networks:
+      - springmysql-net
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8081
+    networks:
+      - springmysql-net
+
+networks:
+  springmysql-net:
+
+volumes:
+  my-db:
+
