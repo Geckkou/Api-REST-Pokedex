@@ -22,8 +22,12 @@ public class PokedexService {
     }
 
     public Page<Pokemon> buscarPokemonNome(String nome, Pageable pageable) {
-        return pokedexRepository.findByNomeIgnoreCaseContaining(nome, pageable)
-                .orElseThrow(() -> new PokedexException(MessageUtils.POKEMON_NOT_EXIST));
+        Page<Pokemon> pokemon = pokedexRepository.findByNomeIgnoreCaseContaining(nome, pageable)
+               .orElseThrow(() -> new PokedexException(MessageUtils.POKEMON_NOT_EXIST));
+
+        if(pokemon.isEmpty()) throw new PokedexException(MessageUtils.POKEMON_NOT_EXIST);
+
+        return pokemon;
     }
 
     public Pokemon buscarPokemonNumero(int numero) {

@@ -7,7 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
