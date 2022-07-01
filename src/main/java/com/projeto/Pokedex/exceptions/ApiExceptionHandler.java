@@ -48,7 +48,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(PokedexException.class)
-    public ResponseEntity<Object> handleCliente(PokedexException ex, WebRequest request) {
+    public ResponseEntity<Object> handlePokedex(PokedexException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
 
         ResponseMessage responseMessage = new ResponseMessage();
@@ -60,7 +60,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Object> handleProduto(NotFoundException ex, WebRequest request) {
+    public ResponseEntity<Object> handlePokemon(NotFoundException ex, WebRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
 
         ResponseMessage responseMessage = new ResponseMessage();

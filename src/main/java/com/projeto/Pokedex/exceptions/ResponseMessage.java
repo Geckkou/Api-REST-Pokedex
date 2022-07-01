@@ -1,6 +1,5 @@
 package com.projeto.Pokedex.exceptions;
 
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

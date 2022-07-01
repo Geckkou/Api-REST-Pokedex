@@ -1,5 +1,6 @@
 package com.projeto.Pokedex.service;
 
+import com.projeto.Pokedex.exceptions.NotFoundException;
 import com.projeto.Pokedex.exceptions.PokedexException;
 import com.projeto.Pokedex.mapper.PokemonMapper;
 import com.projeto.Pokedex.model.Pokemon;
@@ -23,19 +24,19 @@ public class PokedexService {
     public PokemonDto buscarPokemon(Long id) {
         return pokedexRepository.findById(id)
                 .map(pokemonMapper::toModel)
-                .orElseThrow(() -> new PokedexException(MessageUtils.POKEMON_NOT_EXIST));
+                .orElseThrow(NotFoundException::new);
     }
 
     public PokemonDto buscarPokemonNumero(int numero) {
         return pokedexRepository.findByNumero(numero)
                 .map(pokemonMapper::toModel)
-                .orElseThrow(() -> new PokedexException(MessageUtils.POKEMON_NOT_EXIST));
+                .orElseThrow(NotFoundException::new);
     }
 
     public Page<PokemonDto> buscarPokemonNome(String nome, Pageable pageable) {
         Page<PokemonDto> pokemon = pokedexRepository.findByNomeIgnoreCaseContaining(nome, pageable)
                 .map(pokemonMapper::toCollectionModel)
-               .orElseThrow(() -> new PokedexException(MessageUtils.POKEMON_NOT_EXIST));
+               .orElseThrow(NotFoundException::new);
 
         if(pokemon.isEmpty()) throw new PokedexException(MessageUtils.POKEMON_NOT_EXIST);
 
@@ -63,7 +64,7 @@ public class PokedexService {
 
     public Pokemon buscar(Long id) {
         return pokedexRepository.findById(id)
-                .orElseThrow(() -> new PokedexException(MessageUtils.POKEMON_NOT_EXIST));
+                .orElseThrow(NotFoundException::new);
     }
 
     @Transactional

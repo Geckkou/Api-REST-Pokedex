@@ -1,6 +1,5 @@
 package com.projeto.Pokedex.controller;
 import com.projeto.Pokedex.mapper.PokemonMapper;
-import com.projeto.Pokedex.model.Pokemon;
 import com.projeto.Pokedex.model.dto.input.PokemonInput;
 import com.projeto.Pokedex.model.dto.out.PokemonDto;
 import com.projeto.Pokedex.repository.PokedexRepository;

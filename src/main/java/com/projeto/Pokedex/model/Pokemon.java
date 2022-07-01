@@ -2,10 +2,13 @@ package com.projeto.Pokedex.model;
 
 import com.projeto.Pokedex.ValidationGroups;
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -13,7 +16,6 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "pokemon")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Pokemon {
 
     @Id
@@ -51,5 +53,16 @@ public class Pokemon {
     @Column(name = "descricao")
     private String descricao;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Pokemon pokemon = (Pokemon) o;
+        return id != null && Objects.equals(id, pokemon.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
