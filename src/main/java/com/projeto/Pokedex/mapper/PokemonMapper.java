@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Component
 public class PokemonMapper {
-    
+
     private ModelMapper modelMapper;
     private PokedexRepository pokedexRepository;
 

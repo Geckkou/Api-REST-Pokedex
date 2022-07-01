@@ -1,7 +1,10 @@
 package com.projeto.Pokedex.service;
 
 import com.projeto.Pokedex.exceptions.PokedexException;
+import com.projeto.Pokedex.mapper.PokemonMapper;
 import com.projeto.Pokedex.model.Pokemon;
+import com.projeto.Pokedex.model.dto.input.PokemonInput;
+import com.projeto.Pokedex.model.dto.out.PokemonDto;
 import com.projeto.Pokedex.repository.PokedexRepository;
 import com.projeto.Pokedex.util.MessageUtils;
 import lombok.AllArgsConstructor;
@@ -15,14 +18,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class PokedexService {
 
     private PokedexRepository pokedexRepository;
+    private PokemonMapper pokemonMapper;
 
-    public Pokemon buscarPokemon(Long id) {
+    public PokemonDto buscarPokemon(Long id) {
         return pokedexRepository.findById(id)
+                .map(pokemonMapper::toModel)
                 .orElseThrow(() -> new PokedexException(MessageUtils.POKEMON_NOT_EXIST));
     }
 
-    public Page<Pokemon> buscarPokemonNome(String nome, Pageable pageable) {
-        Page<Pokemon> pokemon = pokedexRepository.findByNomeIgnoreCaseContaining(nome, pageable)
+    public PokemonDto buscarPokemonNumero(int numero) {
+        return pokedexRepository.findByNumero(numero)
+                .map(pokemonMapper::toModel)
+                .orElseThrow(() -> new PokedexException(MessageUtils.POKEMON_NOT_EXIST));
+    }
+
+    public Page<PokemonDto> buscarPokemonNome(String nome, Pageable pageable) {
+        Page<PokemonDto> pokemon = pokedexRepository.findByNomeIgnoreCaseContaining(nome, pageable)
+                .map(pokemonMapper::toCollectionModel)
                .orElseThrow(() -> new PokedexException(MessageUtils.POKEMON_NOT_EXIST));
 
         if(pokemon.isEmpty()) throw new PokedexException(MessageUtils.POKEMON_NOT_EXIST);
@@ -30,41 +42,46 @@ public class PokedexService {
         return pokemon;
     }
 
-    public Pokemon buscarPokemonNumero(int numero) {
-        return pokedexRepository.findByNumero(numero)
+    @Transactional
+    public PokemonDto salvar(PokemonInput pokemon) {
+
+        Pokemon poke = pokemonMapper.toEntity(pokemon);
+
+        boolean nomeEmUso = pokedexRepository.findByNomeIgnoreCase(poke.getNome())
+                .stream()
+                .anyMatch(pokemonExistente -> !pokemonExistente.equals(pokemon));
+
+        boolean numeroEmUso = pokedexRepository.findByNumero(poke.getNumero())
+                .stream()
+                .anyMatch(pokemonExistente -> !pokemonExistente.equals(pokemon));
+
+        if(nomeEmUso || numeroEmUso) throw new PokedexException(MessageUtils.POKEMON_ALREADY_EXIST);
+
+        Pokemon pokemonCriado = pokedexRepository.save(poke);
+        return pokemonMapper.toModel(pokemonCriado);
+    }
+
+    public Pokemon buscar(Long id) {
+        return pokedexRepository.findById(id)
                 .orElseThrow(() -> new PokedexException(MessageUtils.POKEMON_NOT_EXIST));
     }
 
     @Transactional
-    public Pokemon salvar(Pokemon pokemon) {
-        boolean nomeEmUso = pokedexRepository.findByNomeIgnoreCase(pokemon.getNome())
-                .stream()
-                .anyMatch(pokemonExistente -> !pokemonExistente.equals(pokemon));
-
-        boolean numeroEmUso = pokedexRepository.findByNumero(pokemon.getNumero())
-                .stream()
-                .anyMatch(pokemonExistente -> !pokemonExistente.equals(pokemon));
-
-        if(nomeEmUso | numeroEmUso) throw new PokedexException(MessageUtils.POKEMON_ALREADY_EXIST);
-
-        return pokedexRepository.save(pokemon);
-    }
-
-    @Transactional
-    public Pokemon excluir(Long id) {
-        Pokemon pokemon = this.buscarPokemon(id);
+    public PokemonDto excluir(Long id) {
+        PokemonDto pokemon = this.buscarPokemon(id);
 
         pokedexRepository.deleteById(pokemon.getId());
         return pokemon;
     }
 
     @Transactional
-    public Pokemon atualizar(Long id, Pokemon pokemon) {
-        Pokemon poke = this.buscarPokemon(id);
+    public PokemonDto atualizar(Long id, PokemonInput pokemon) {
+        Pokemon poke = this.buscar(id);
 
-        pokemon.setId(poke.getId());
-        pokemon = pokedexRepository.save(pokemon);
+        Pokemon pokemonToUpdate = pokemonMapper.toEntity(pokemon);
 
-        return pokemon;
+        pokemonToUpdate.setId(poke.getId());
+        Pokemon pokemonUpdate = pokedexRepository.save(pokemonToUpdate);
+        return pokemonMapper.toModel(pokemonUpdate);
     }
 }
