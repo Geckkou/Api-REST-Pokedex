@@ -91,6 +91,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<mainClass>com.places.Main</mainClass>
 					<finalName>service</finalName>
 					<excludes>
 						<exclude>
@@ -99,6 +100,14 @@
 						</exclude>
 					</excludes>
 				</configuration>
+
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 		</plugins>
