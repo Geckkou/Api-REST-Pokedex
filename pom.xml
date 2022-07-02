@@ -91,7 +91,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.places.Main</mainClass>
+					<mainClass>com.projeto.Pokedex.PokedexApplication</mainClass>
 					<finalName>service</finalName>
 					<excludes>
 						<exclude>
