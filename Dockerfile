@@ -2,7 +2,9 @@ FROM openjdk:11
 
 WORKDIR /app
 
-COPY target/Pokedex-0.0.1-SNAPSHOT.jar /app/Pokedex-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=target/*.jar
+
+COPY ${JAR_FILE} /app/Pokedex-0.0.1-SNAPSHOT.jar
 
 EXPOSE 8080
 
